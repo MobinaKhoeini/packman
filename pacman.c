@@ -6,7 +6,7 @@
 // Declared here 
 #define WIDTH 40 
 #define HEIGHT 20 
-#define PACMAN 'C' 
+#define PACMAN 'p' 
 #define WALL '#' 
 #define FOOD '.' 
 #define EMPTY ' ' 
