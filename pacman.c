@@ -117,65 +117,152 @@ void move(int movex, int movey) {
         packman[pacman_x][pacman_y].type = PACMAN;
     } 
 } 
+void computerMode()
+{
+    int food_x = -1, food_y = -1;
+    for (int i = 0; i < HEIGHT; i++)
+    {
+        for (int j = 0; j < WIDTH; j++)
+        {
+            if (packman[i][j].type == FOOD)
+            {
+                food_x = i;
+                food_y = j;
+                break;
+            }
+        }
+        if (food_x != -1)
+            break;
+    }
+    if (food_x == -1)
+        return;
+    if (pacman_x < food_x)
+    {
+        move(1, 0);
+    }
+    else if (pacman_x > food_x)
+    {
+        move(-1, 0);
+    }
+    else if (pacman_y < food_y)
+    {
+        move(0, 1);
+    }
+    else if (pacman_y > food_y)
+    {
+        move(0, -1);
+    }
+}
 
-int main() { 
+int main()
+{
     srand(time(0)); // Initialize random seed
-    initialize(); 
-    char ch; 
-    food -= 35; 
-    int totalFood = food; 
+    initialize();
+    char ch;
+    food -= 35;
+    int totalFood = food;
 
-    printf("Use buttons for w(up), a(left), d(right), and s(down)\nPress q to quit\n"); 
-    printf("Enter Y to continue: \n"); 
+    printf("Use buttons for w(up), a(left), d(right), and s(down)\nPress q to quit\n");
+    printf("Enter Y to continue: \n");
 
-    ch = getch(); 
-    if (ch != 'Y' && ch != 'y') { 
-        printf("Exit Game! "); 
-    return 1; 
-  } 
-
-  while (1) { 
-    draw(); 
-    printf("Total Food count: %d\n", totalFood); 
-    printf("Total Food eaten: %d\n", curr); 
-    if (res == 1) { 
-      // Clear screen 
-      system("cls"); 
-      printf("Game Over! Dead by Demon\n Your Score: "
-        "%d\n", 
-        score); 
-      return 1; 
-    } 
-
-    if (res == 2) { 
-      // Clear screen 
-      system("cls"); 
-      printf("You Win! \n Your Score: %d\n", score); 
-      return 1; 
-    } 
-
-    // Taking the Input from the user 
     ch = getch();
-    // Moving According to the 
-    // input character 
-    switch (ch) { 
-    case 'w': 
-      move(0, -1); 
-      break; 
-    case 's': 
-      move(0, 1); 
-      break; 
-    case 'a': 
-      move(-1, 0); 
-      break; 
-    case 'd': 
-      move(1, 0); 
-      break; 
-    case 'q': 
-      printf("Game Over! Your Score: %d\n", score); 
-      return 0; 
-    } 
-  } 
+    if (ch != 'Y' && ch != 'y')
+    {
+        printf("Exit Game! ");
+        return 1;
+    }
+        {
+    while (1)
+    {
+        printf("please choose your required option:\n");
+        printf("1.Computer mode\n");
+        printf("2.human mode\n");
+        int Choice;
+        scanf("%d", &Choice);
+        switch (Choice)
+    {
+        case 1:
+        while(1)
+        {
+             draw();
+            printf("Total Food count: %d\n", totalFood);
+            printf("Total Food eaten: %d\n", curr);
+             if (res == 1)
+            {
+                // Clear screen
+                system("cls");
+                printf("Game Over! Dead by Demon\n Your Score: "
+                       "%d\n",
+                       score);
+                return 1;
+            }
 
-  return 0; 
+            if (res == 2)
+            {
+                // Clear screen
+                system("cls");
+                printf("You Win! \n Your Score: %d\n", score);
+                return 1;
+            }
+            computerMode();
+        }
+        break;
+        case 2:
+        while (1)
+        {
+            draw();
+            printf("Total Food count: %d\n", totalFood);
+            printf("Total Food eaten: %d\n", curr);   
+            if (res == 1)
+            {
+                // Clear screen
+                system("cls");
+                printf("Game Over! Dead by Demon\n Your Score: "
+                       "%d\n",
+                       score);
+                return 1;
+            }
+
+            if (res == 2)
+            {
+                // Clear screen
+                system("cls");
+                printf("You Win! \n Your Score: %d\n", score);
+                return 1;
+            }
+
+        // Taking the Input from the user
+        ch = getch();
+        // Moving According to the
+        // input character
+        switch (ch)
+        {
+        case 'w':
+            move(0, -1);
+            break;
+        case 's':
+            move(0, 1);
+            break;
+        case 'a':
+            move(-1, 0);
+            break;
+        case 'd':
+            move(1, 0);
+            break;
+        case 'q':
+            printf("Game Over! Your Score: %d\n", score);
+            return 0;
+        }
+        }
+        break;
+        default:
+        printf("invalid choice!\n");
+        break;
+    }
+    }
+
+    return 0;
+}
+
+  
 }
