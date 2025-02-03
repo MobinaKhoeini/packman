@@ -2,6 +2,7 @@
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <time.h>
+#include <windows.h>
 
 #define WIDTH 40 
 #define HEIGHT 20 
