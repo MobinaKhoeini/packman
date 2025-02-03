@@ -73,7 +73,7 @@ void initialize()
         int row = rand() % HEIGHT;
         for (int j = 3; j < WIDTH - 3; j++)
         {
-            if (packman[row][j].type != WALL && packman[row][j].type != PACMAN && packman[i][j].type != ENEMY)
+            if (packman[row][j].type != WALL && packman[row][j].type != PACMAN && packman[row][j].type != ENEMY)
             {
                 packman[row][j].type = WALL;
             }
