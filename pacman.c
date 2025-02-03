@@ -172,6 +172,12 @@ void enemyMove()
 
 void move(int move_x, int move_y)
 {
+    if(speedCount>0)
+    {
+        move_x*=2;
+        move_y*=2;
+        speedCount--;
+    }
     int x = pacman_x + move_x;
     int y = pacman_y + move_y;
 
@@ -197,6 +203,11 @@ void move(int move_x, int move_y)
         {
             res = 3;
             return;
+        }
+        else if (packman[x][y].type == SPEED)
+        {
+            speedCount = totalSpeed ;
+            packman[x][y].type == EMPTY ;
         }
         packman[pacman_x][pacman_y].type = EMPTY;
         pacman_x = x;
@@ -230,31 +241,6 @@ void computerMode()
         } break;
     }
         move(move_x,move_y);
-        /*
-        draw();
-
-                printf("Total Food count: %d\n", totalFood);
-                printf("Total Food eaten: %d\n", curr);
-
-                if (res == 1)
-                {
-                    // Clear screen
-                    system("cls");
-                    printf("Game Over! Dead by Demon\n Your Score: "
-                           "%d\n",
-                           score);
-                    return;
-                }
-
-                if (res == 2)
-                {
-                    // Clear screen
-                    system("cls");
-                    printf("You Win! \n Your Score: %d\n", score);
-                    return;
-                }
-                */
-
 }
 int main()
 {
@@ -278,6 +264,11 @@ int main()
         printf("please choose your required option:\n");
         printf("1.Computer mode\n");
         printf("2.human mode\n");
+        if(speedCount > 0)
+        {
+             printf("%d time(s) to double move\n" ,speedCount);
+        }
+
         int Choice;
         scanf("%d", &Choice);
         switch (Choice)
@@ -321,6 +312,10 @@ int main()
                 draw();
                 printf("Total Food count: %d\n", totalFood);
                 printf("Total Food eaten: %d\n", curr);
+                if(speedCount > 0)
+        {
+             printf("%d time(s) to double move\n" ,speedCount);
+        }
                 if (res == 1)
                 {
                     // Clear screen
