@@ -11,7 +11,7 @@
 #define FOOD '.'
 #define EMPTY ' '
 #define DEMON 'X'
-
+#define ENEMY 'E'
 int res = 0;
 int score = 0;
 int pacman_x, pacman_y;
@@ -43,13 +43,24 @@ void initialize()
             }
         }
     }
+     int count = 10;
+    while (count != 0)
+    {
+        int i = rand() % (HEIGHT-2)+1;
+        int j = rand() % (WIDTH-2)+1;
+        if (packman[i][j].type != WALL && packman[i][j].type != PACMAN)
+        {
+            packman[i][j].type = ENEMY;
+            count--;
+        }
+    }
 
     int count = 50;
     while (count != 0)
     {
         int i = rand() % HEIGHT;
         int j = rand() % WIDTH;
-        if (packman[i][j].type != WALL && packman[i][j].type != PACMAN)
+        if (packman[i][j].type != WALL && packman[i][j].type != PACMAN && packman[i][j].type != ENEMY)
         {
             packman[i][j].type = WALL;
             count--;
@@ -62,7 +73,7 @@ void initialize()
         int row = rand() % HEIGHT;
         for (int j = 3; j < WIDTH - 3; j++)
         {
-            if (packman[row][j].type != WALL && packman[row][j].type != PACMAN)
+            if (packman[row][j].type != WALL && packman[row][j].type != PACMAN && packman[i][j].type != ENEMY)
             {
                 packman[row][j].type = WALL;
             }
@@ -75,7 +86,7 @@ void initialize()
         int i = rand() % HEIGHT;
         int j = rand() % WIDTH;
 
-        if (packman[i][j].type != WALL && packman[i][j].type != PACMAN)
+        if (packman[i][j].type != WALL && packman[i][j].type != PACMAN && packman[i][j].type != ENEMY)
         {
             packman[i][j].type = DEMON;
             count--;
@@ -134,6 +145,11 @@ void move(int move_x, int move_y)
         else if (packman[x][y].type == DEMON)
         {
             res = 1;
+            return;
+        }
+        else if (packman[x][y].type == ENEMY)
+        {
+            res = 3;
             return;
         }
         packman[pacman_x][pacman_y].type = EMPTY;
