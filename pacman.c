@@ -12,12 +12,15 @@
 #define EMPTY ' '
 #define DEMON 'X'
 #define ENEMY 'E'
+#define SPEED '$' 
 int res = 0;
 int score = 0;
 int pacman_x, pacman_y;
 int enemy_x,enemy_y;
 int food = 0;
 int curr = 0;
+int speedCount;
+int totalSpeed=10;
 
 typedef struct
 {
@@ -102,6 +105,15 @@ void initialize()
                 packman[i][j].type = FOOD;
                 food++;
             }
+        }
+    }
+    for(int i=0; i<5; i++)
+    {
+        int Speed_x= rand()%(HEIGHT-2)+1;
+        int Speed_y= rand()%(WIDTH-2)+1;
+        if(packman[Speed_x][Speed_y].type==EMPTY)
+        {
+            packman[Speed_x][Speed_y].type=SPEED;
         }
     }
 }
