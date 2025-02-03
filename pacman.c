@@ -15,6 +15,7 @@
 int res = 0;
 int score = 0;
 int pacman_x, pacman_y;
+int enemy_x,enemy_y;
 int food = 0;
 int curr = 0;
 
@@ -43,18 +44,13 @@ void initialize()
             }
         }
     }
-     int count = 10;
-    while (count != 0)
-    {
-        int i = rand() % (HEIGHT-2)+1;
-        int j = rand() % (WIDTH-2)+1;
-        if (packman[i][j].type != WALL && packman[i][j].type != PACMAN)
-        {
-            packman[i][j].type = ENEMY;
-            count--;
-        }
-    }
+    enemy_x = rand() % (HEIGHT-2)+1;
+        enemy_y= rand() % (WIDTH-2)+1;
 
+        if (packman[enemy_x][enemy_y].type != WALL && packman[enemy_x][enemy_y].type != PACMAN)
+        {
+            packman[enemy_x][enemy_y].type = ENEMY;
+        }
     int count = 50;
     while (count != 0)
     {
@@ -123,6 +119,44 @@ void draw()
     }
     printf("Score: %d\n", score);
 }
+void enemyMove()
+{
+    int move_x=0;
+    int move_y=0;
+    int direction=rand()%4;
+    switch (direction)
+    {
+        case 0:
+        {
+            move_x=-1; move_y=0;
+        } break;
+        case 1:
+        {
+            move_x=1; move_y=0;
+        } break;
+        case 2:
+        {
+            move_x=0; move_y=-1;
+        } break;
+        case 3:
+        {
+            move_x=0; move_y=1;
+        } break;
+    }
+        int new_x = enemy_x + move_x;
+        int new_y = enemy_y + move_y;
+        if(packman[new_x][new_y].type!=WALL)
+        {
+            packman[enemy_x][enemy_y].type=EMPTY;
+            enemy_x = new_x;
+            enemy_y = new_y;
+            packman[enemy_x][enemy_y].type=ENEMY;
+        }
+        if(pacman_x==enemy_x && pacman_y==enemy_y)
+        {
+            res=3;
+        }
+}
 
 void move(int move_x, int move_y)
 {
@@ -158,8 +192,9 @@ void move(int move_x, int move_y)
         packman[pacman_x][pacman_y].type = PACMAN;
     }
 }
-void computerMode(int totalfood)
+void computerMode()
 {
+    enemyMove();
     int move_x=0;
     int move_y=0;
     int direction=rand()%4;
@@ -262,7 +297,7 @@ int main()
                     return 1;
                 }
                 
-                computerMode(totalFood);
+                computerMode();
                 Sleep(1000);
             }
         }
@@ -313,6 +348,16 @@ int main()
                 case 'q':
                     printf("Game Over! Your Score: %d\n", score);
                     return 0;
+                }
+                enemyMove();
+                if (res == 3)
+                {
+                    // Clear screen
+                    system("cls");
+                    printf("Game Over! Dead by Enemy\n Your Score: "
+                           "%d\n",
+                           score);
+                    return 1;
                 }
             }
         }
