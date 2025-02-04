@@ -250,7 +250,7 @@ void saveGame() {
         return;
     }
     
-    fprintf(file, "%d %d %d %d %d %d %d\n", pacman_x, pacman_y, enemy_x, enemy_y, score, food, curr);
+   fprintf(file, "%d %d %d %d %d %d %d %d\n",score, food, curr, pacman_x, pacman_y, enemy_x, enemy_y, totalSpeed);
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 fprintf(file, "%c", packman[i][j].type);
@@ -269,7 +269,7 @@ void loadGame() {
     }
 
     
-    fscanf(file, "%d %d %d\n", &score, &food, &curr); 
+    fscanf(file, "%d %d %d %d %d %d %d %d\n", &score, &food, &curr, &pacman_x, &pacman_y, &enemy_x, &enemy_y, &totalSpeed);
       
        for (int i = 0; i < HEIGHT; i++) 
        {
