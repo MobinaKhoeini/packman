@@ -242,6 +242,25 @@ void computerMode()
     }
         move(move_x,move_y);
 }
+void saveGame() {
+    FILE *file = fopen("D:/saveBinary.c.txt", "wb");
+    if(file==NULL)
+    {
+        printf("Error saving the game!\n");
+        return;
+    }
+    
+    fprintf(file, "%d %d %d %d %d %d %d\n", pacman_x, pacman_y, enemy_x, enemy_y, score, food, curr);
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                fprintf(file, "%c", packman[i][j].type);
+            }
+            fprintf(file, "\n");
+        }
+        fclose(file);
+        printf("Game saved successfully!\n");  
+        return ;
+}
 int main()
 {
     srand(time(0)); // Initialize random seed
