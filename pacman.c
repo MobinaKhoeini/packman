@@ -12,7 +12,8 @@
 #define EMPTY ' '
 #define DEMON 'X'
 #define ENEMY 'E'
-#define SPEED '$' 
+#define SPEED '$'
+
 int res = 0;
 int score = 0;
 int pacman_x, pacman_y;
@@ -21,6 +22,7 @@ int food = 0;
 int curr = 0;
 int speedCount;
 int totalSpeed=10;
+int totalfood;
 
 typedef struct
 {
@@ -47,14 +49,15 @@ void initialize()
             }
         }
     }
-    enemy_x = rand() % (HEIGHT-2)+1;
+   
+        enemy_x = rand() % (HEIGHT-2)+1;
         enemy_y= rand() % (WIDTH-2)+1;
 
         if (packman[enemy_x][enemy_y].type != WALL && packman[enemy_x][enemy_y].type != PACMAN)
         {
             packman[enemy_x][enemy_y].type = ENEMY;
         }
-    int count = 50;
+   int count = 50;
     while (count != 0)
     {
         int i = rand() % HEIGHT;
@@ -131,6 +134,7 @@ void draw()
     }
     printf("Score: %d\n", score);
 }
+
 void enemyMove()
 {
     int move_x=0;
@@ -157,7 +161,7 @@ void enemyMove()
     }
         int new_x = enemy_x + move_x;
         int new_y = enemy_y + move_y;
-        if(packman[new_x][new_y].type!=WALL)
+        if(packman[new_x][new_y].type!=WALL && packman[new_x][new_y].type!=FOOD)
         {
             packman[enemy_x][enemy_y].type=EMPTY;
             enemy_x = new_x;
@@ -168,8 +172,8 @@ void enemyMove()
         {
             res=3;
         }
+        
 }
-
 void move(int move_x, int move_y)
 {
     if(speedCount>0)
@@ -202,17 +206,19 @@ void move(int move_x, int move_y)
         else if (packman[x][y].type == ENEMY)
         {
             res = 3;
-            return;
+            return ;
         }
         else if (packman[x][y].type == SPEED)
         {
             speedCount = totalSpeed ;
-            packman[x][y].type == EMPTY ;
+            packman[x][y].type = EMPTY ;
         }
         packman[pacman_x][pacman_y].type = EMPTY;
         pacman_x = x;
         pacman_y = y;
         packman[pacman_x][pacman_y].type = PACMAN;
+
+        
     }
 }
 void computerMode()
@@ -241,16 +247,18 @@ void computerMode()
         } break;
     }
         move(move_x,move_y);
+
 }
 void saveGame() {
-    FILE *file = fopen("D:/saveBinary.c.txt", "wb");
+    FILE *file = fopen("D:/pacmanSave.txt", "wb");
     if(file==NULL)
     {
         printf("Error saving the game!\n");
         return;
     }
+     fprintf(file, "%d %d %d %d %d %d %d %d\n",score, food, curr, pacman_x, pacman_y, enemy_x, enemy_y, totalSpeed);
     
-   fprintf(file, "%d %d %d %d %d %d %d %d\n",score, food, curr, pacman_x, pacman_y, enemy_x, enemy_y, totalSpeed);
+    
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
                 fprintf(file, "%c", packman[i][j].type);
@@ -261,6 +269,7 @@ void saveGame() {
         printf("Game saved successfully!\n");  
         return ;
 }
+
 void loadGame() {
     FILE *file = fopen("D:/pacmanSave.txt", "r");
     if (file == NULL) {
@@ -269,7 +278,7 @@ void loadGame() {
     }
 
     
-    fscanf(file, "%d %d %d %d %d %d %d %d\n", &score, &food, &curr, &pacman_x, &pacman_y, &enemy_x, &enemy_y, &totalSpeed);
+    fscanf(file, "%d %d %d %d %d %d %d %d\n", &score, &food, &curr, &pacman_x, &pacman_y, &enemy_x, &enemy_y, &totalSpeed); 
       
        for (int i = 0; i < HEIGHT; i++) 
        {
@@ -287,12 +296,8 @@ void loadGame() {
 }
 int main()
 {
-    srand(time(0)); // Initialize random seed
-    initialize();
     char ch;
-    food -= 35;
-    int totalFood = food;
-
+    int totalFood;
     printf("Use buttons for w(up), a(left), d(right), and s(down)\nPress q to quit\n");
     printf("Enter Y to continue: \n");
 
@@ -304,26 +309,29 @@ int main()
     }
     while (1)
     {
+
         printf("please choose your required option:\n");
         printf("1.Computer mode\n");
         printf("2.human mode\n");
-        if(speedCount > 0)
-        {
-             printf("%d time(s) to double move\n" ,speedCount);
-        }
-
         int Choice;
         scanf("%d", &Choice);
         switch (Choice)
         {
         case 1:
         {
+            srand(time(0));
+           initialize();
+           food -= 35;
+           totalFood = food;
             while (1)
-            {
-                
+            {   
                 draw();
                 printf("Total Food count: %d\n", totalFood);
                 printf("Total Food eaten: %d\n", curr);
+                if(speedCount > 0)
+                 {
+                     printf("%d time(s) to double move\n" ,speedCount);
+                 }
 
                 if (res == 1)
                 {
@@ -340,42 +348,54 @@ int main()
                     // Clear screen
                     system("cls");
                     printf("You Win! \n Your Score: %d\n", score);
+                    return 1;
+                }
+                if (res == 3)
+                {
+                    // Clear screen
+                    system("cls");
+                    printf("Game Over! Dead by Enemy\n Your Score: "
+                           "%d\n",
+                           score);
                     return 1;
                 }
                 
                 computerMode();
                 Sleep(1000);
+            
             }
-        }
+            }
         break;
         case 2:
         {
-            while (1)
-            {
-                printf("Do you want to play the previous game?(Y/N)\n");
+            printf("Do you want to play the previous game?(Y/N)\n");
 
-               ch = getch();
-               if (ch == 'Y' || ch == 'y')
-               {
-               loadGame();
-               totalFood = food;
+    ch = getch();
+    if (ch == 'Y' || ch == 'y')
+    {
+      loadGame();
+      totalFood = food;
     }
-                else { 
+    else { 
         
-                srand(time(0));
-                initialize();
-                food -= 35;
-                totalFood = food;
-                score=0;
-                curr=0;
-                 }
+    srand(time(0));
+    initialize();
+    food -= 35;
+     totalFood = food;
+    score=0;
+    curr=0;
+    }
+    
+         while (1)
+            {
+                
                 draw();
                 printf("Total Food count: %d\n", totalFood);
                 printf("Total Food eaten: %d\n", curr);
                 if(speedCount > 0)
-        {
-             printf("%d time(s) to double move\n" ,speedCount);
-        }
+                 {
+                     printf("%d time(s) to double move\n" ,speedCount);
+                 }
                 if (res == 1)
                 {
                     // Clear screen
@@ -393,7 +413,7 @@ int main()
                     printf("You Win! \n Your Score: %d\n", score);
                     return 1;
                 }
-
+                 //enemyMove();
                 // Taking the Input from the user
                 ch = getch();
                 // Moving According to the
@@ -413,9 +433,16 @@ int main()
                     move(0, 1);
                     break;
                 case 'q':
+                    printf("Do you want to save the game before quitting? (Y/N)\n");
+                    char saveChoice = getch();
+                    if(saveChoice == 'Y'|| saveChoice == 'y' )
+                    {
+                        saveGame();
+                    }
                     printf("Game Over! Your Score: %d\n", score);
                     return 0;
                 }
+                
                 enemyMove();
                 if (res == 3)
                 {
@@ -426,7 +453,11 @@ int main()
                            score);
                     return 1;
                 }
+                
+                
             }
+            
+    
         }
         break;
         default:
