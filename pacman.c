@@ -360,6 +360,15 @@ int main()
                loadGame();
                totalFood = food;
     }
+                else { 
+        
+                srand(time(0));
+                initialize();
+                food -= 35;
+                totalFood = food;
+                score=0;
+                curr=0;
+                 }
                 draw();
                 printf("Total Food count: %d\n", totalFood);
                 printf("Total Food eaten: %d\n", curr);
