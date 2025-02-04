@@ -352,6 +352,14 @@ int main()
         {
             while (1)
             {
+                printf("Do you want to play the previous game?(Y/N)\n");
+
+               ch = getch();
+               if (ch == 'Y' || ch == 'y')
+               {
+               loadGame();
+               totalFood = food;
+    }
                 draw();
                 printf("Total Food count: %d\n", totalFood);
                 printf("Total Food eaten: %d\n", curr);
