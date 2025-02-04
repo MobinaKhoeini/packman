@@ -261,6 +261,30 @@ void saveGame() {
         printf("Game saved successfully!\n");  
         return ;
 }
+void loadGame() {
+    FILE *file = fopen("D:/pacmanSave.txt", "r");
+    if (file == NULL) {
+        printf("No saved game found. Starting a new game.\n");
+        return;
+    }
+
+    
+    fscanf(file, "%d %d %d\n", &score, &food, &curr); 
+      
+       for (int i = 0; i < HEIGHT; i++) 
+       {
+           for (int j = 0; j < WIDTH; j++) 
+           {
+               fscanf(file, "%c ", &packman[i][j].type);
+           }
+            fscanf(file, "\n");
+       }
+       
+
+    fclose(file);
+    printf("Game loaded successfully!\n");
+    res=0;
+}
 int main()
 {
     srand(time(0)); // Initialize random seed
